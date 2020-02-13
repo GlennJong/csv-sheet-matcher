@@ -1,0 +1,486 @@
+button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+button:focus {
+  outline: none;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+.csv-matcher {}
+.upload-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: hsl(200, 30%, 95%);
+  z-index: 1;
+  transition: all .3s ease .5s;
+}
+.upload-wrapper.-active {
+  opacity: 0;
+  visibility: hidden;
+}
+.upload-wrapper.-active .drop-zone {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.drop-zone {
+  position: relative;
+  display: flex;
+  margin-top: -40px;
+  background: #FFF;
+  width: 75vw;
+  height: 75vh;
+  box-shadow: 1px 2px 4px hsla(0, 0%, 0%, .25);
+  transition: all .3s ease;
+}
+.drop-zone.-active {
+  height: 70vh;
+}
+.drop-zone:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: 1px;
+  background: hsl(200, 20%, 92%);
+}
+.drop-zone .file {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  cursor: pointer;
+}
+.drop-zone .file:before {
+  content: "";
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  right: 5%;
+  bottom: 5%;
+  border: 5px dashed hsl(200, 30%, 90%);
+  transition: all .3s ease;
+}
+.drop-zone .file.-active:before {
+  border: 5px dashed hsl(200, 30%, 70%);
+  transform: scale(0.95);
+}
+
+.drop-zone .file .icon {
+  display: block;
+  margin-bottom: 8px;
+  width: 60px;
+  height: auto;
+  color: hsl(200, 30%, 80%);
+}
+.drop-zone .file .icon svg {
+  width: 100%;
+  height: auto;
+}
+.drop-zone .file .msg {
+  color: hsl(200, 30%, 70%);
+  font-weight: 600;
+  font-size: 14px;
+}
+.drop-zone .file .name {
+  margin-top: 12px;
+  color: hsl(200, 80%, 40%);
+  font-weight: 600;
+  font-size: 18px;
+}
+.drop-zone .file .info {
+  margin-top: 12px;
+  max-width: 50%;
+  width: 240px;
+  color: hsl(200, 30%, 50%);
+  /* color: hsl(200, 80%, 40%); */
+  /* font-weight: 600; */
+  font-size: 14px;
+}
+.drop-zone .start {
+  position: absolute;
+  top: 100%;
+  left: 0%;
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: hsl(200, 80%, 100%);
+  background: hsl(200, 80%, 60%);
+  transform: translateY(-100%);
+  transition: all .3s ease;
+  z-index: -1;
+}
+.drop-zone .start.-active {
+  transform: translateY(0);
+}
+.drop-zone .start:hover {
+  color: hsl(200, 80%, 96%);
+  background: hsl(200, 80%, 40%);
+}
+
+
+.application {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 99.9vh;
+  overflow: hidden;
+}
+.application .options-bar {}
+.application .table-wrapper { height: 100%; transition: all 1s ease }
+.application .result-wrapper { height: 0%; transition: all 1s ease }
+
+.application.-result .options-bar {}
+.application.-result .table-wrapper {height: 30%;}
+.application.-result .result-wrapper { height: 70% }
+
+.application.-fill .options-bar {}
+.application.-fill .table-wrapper {height: 0%;}
+.application.-fill .result-wrapper { height: 100% }
+
+
+.options-bar {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid hsl(200, 20%, 92%);
+  background: #FFF;
+}
+.options-submit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  display: block;
+  width: 120px;
+  height: 32px;
+  font-size: 14px;
+  font-weight: 600;
+  color: hsl(200, 80%, 100%);
+  background: hsl(200, 80%, 60%);
+  transition: all .3s ease;
+}
+.options-submit:hover {
+  color: hsl(200, 80%, 96%);
+  background: hsl(200, 80%, 40%);
+}
+.options-submit .fa {
+  margin-right: 4px;
+}
+.controller-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+.controller-wrapper .controller {
+  display: flex;
+  width: 50%;
+  /* border-bottom: 1px solid hsl(200, 20%, 95%); */
+}
+.controller-wrapper .controller:last-child {
+  border-left: 1px solid hsl(200, 20%, 92%);
+}
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+  /* width: 200px; */
+}
+.dropdown .head {
+  display: flex;
+  align-items: center;
+  border-right: 1px solid hsl(200, 20%, 92%);
+  padding: 6px 16px 6px 12px;
+  background: hsl(200, 80%, 100%);
+  width: 100px;
+  font-size: 14px;
+  transition: all .15s ease;
+  cursor: pointer;
+}
+.dropdown .head:after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  border-top: 4px solid hsl(200, 20%, 25%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  transition: all .15s ease;
+}
+.dropdown .head.-active:after,
+.dropdown .head:hover:after {
+  border-top: 4px solid #FFF;
+}
+.dropdown .head.-active,
+.dropdown .head:hover {
+  background: hsl(200, 80%, 55%);
+  color: #FFF;
+}
+.tag-selector .dropdown .head.-active,
+.tag-selector .dropdown .head:hover {
+  background: hsl(200, 80%, 55%);
+}
+.addition-selector .dropdown .head.-active,
+.addition-selector .dropdown .head:hover {
+  background: hsl(200, 80%, 55%);
+}
+.dropdown .head svg {
+  margin-right: 4px;
+  width: 16px;
+  transition: all .15s ease;
+}
+.tag-selector .dropdown .head svg {
+  color: hsl(200, 80%, 60%)
+}
+.addition-selector .dropdown .head svg {
+  color: hsl(270, 50%, 70%)
+}
+
+.dropdown .head.-active svg,
+.dropdown .head:hover svg {
+  color: #FFF;
+}
+.dropdown .items {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 140px;
+  max-height: 0px;
+  background: #FFF;
+  overflow: hidden;
+  transition: all .15s ease;
+  box-shadow: 1px 2px 4px hsla(0, 0%, 0%, .25);
+  z-index: 1;
+}
+.dropdown .items.-active {
+  /* display: none; */
+  /* border-top: 1px solid #DDD; */
+  max-height: 90vh;
+  overflow: auto;
+}
+.dropdown .items .button,
+.dropdown .items button {
+  position: relative;
+  display: block;
+  padding: 4px 8px;
+  width: 100%;
+  color: hsl(0, 0%, 45%);
+  text-align: left;
+}
+.dropdown .items button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background: hsl(200, 80%, 55%);
+  z-index: -1;
+}
+.dropdown .items button:hover {
+  color: hsl(0, 0%, 25%);
+}
+.dropdown .items button:hover:before {
+  width: 2px;
+}
+.dropdown .items button.-tag {
+  background: hsl(200, 80%, 55%);
+  color: #FFF;
+}
+.dropdown .items button.-tag:before {
+  width: 100%;
+}
+.selected {
+  display: flex;
+}
+.selected button {
+  margin: 0 8px;
+}
+.tag-selector .selected button {
+ color: hsl(200, 80%, 50%);
+}
+.addition-selector .selected button {
+ color: hsl(270, 60%, 65%);
+}
+.selected button:hover {
+  color: hsl(10, 80%, 55%);
+}
+.selected button svg {
+  margin-right: 4px;
+}
+
+.table-wrapper {
+  display: flex;
+  justify-content: space-between;
+  vertical-align: middle;
+  /* border: 1px solid hsl(200, 10%, 92%); */
+  /* border-radius: 2px; */
+  /* border-bottom: 1px solid #CCC; */
+  background: #FFF;
+  box-shadow: 1px 2px 4px hsla(0, 0%, 0%, .2);
+  overflow: hidden;
+}
+.table-wrapper.-left .left { width: 100% }
+.table-wrapper.-left .right { width: 0%; overflow: hidden;}
+.table-wrapper.-right .left { width: 0%; overflow: hidden; }
+.table-wrapper.-right .right { width: 100% }
+.table-wrapper .item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  transition: all .3s ease;
+}
+.table-wrapper .item + .item {
+  border-left: 1px solid hsl(200, 20%, 92%);
+}
+.table-wrapper .table {
+  /* height: calc(100%-34px); */
+}
+.table {
+  position: relative;
+  border-top: 1px solid hsl(200, 20%, 92%);
+  overflow: auto;
+  height: 100%;
+  /* overflow: hidden; */
+}
+.table table,
+.table th,
+.table td {
+  border-spacing: 0;
+  margin: 0;
+  padding: 0;
+}
+.table table {
+  position: relative;
+  width: 100%;
+  color: #333;
+  font-size: 12px;
+}
+.table tr {
+  background: #FFF;
+}
+.table tr:first-child td {
+  position: sticky;
+  top: 0;
+  padding: 12px 8px;
+  background: hsl(200, 20%, 100%);
+  font-weight: 600;
+}
+.table tr:nth-child(odd) {
+  /* background: hsl(200, 20%, 97%); */
+}
+.table tr.-conflict {
+  box-shadow: inset 0px 0px 0px 1px hsl(10, 75%, 65%);
+}
+.table tr.-conflict td,
+.table tr.-conflict td.-increase {
+  border-bottom: 1px solid hsl(10, 75%, 65%);
+}
+.table tr td {
+  white-space: nowrap;
+  border-bottom: 1px solid hsl(200, 20%, 92%);
+  padding: 4px 8px;
+}
+.table tr:hover td {
+  background: hsl(200, 40%, 60%, .1);
+}
+.table tr td.-tag {
+  color: hsl(200, 80%, 50%);
+}
+.table tr td.-addition {
+  color: hsl(270, 60%, 65%);
+}
+.table tr td.-increase {
+  border-bottom: 1px solid hsl(260, 50%, 92%);
+  background: hsla(270, 50%, 60%, .1);
+}
+.table tr:hover td.-increase {
+  background: hsla(270, 50%, 60%, .2);
+}
+.result-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid hsl(200, 20%, 92%);
+  width: 100%;
+  height: 20%;
+  background: #FFF;
+}
+.table-head {
+  position: relative;
+  display: flex;
+  padding: 12px 12px;
+  padding-bottom: 4px;
+  font-size: 13px;
+}
+.table-head .name {
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+}
+.table-head .name svg {
+  margin-right: 4px;
+  width: 16px;
+  height: auto;
+}
+.table-head .dropdown button:hover {
+  color: hsl(200, 80%, 40%);
+}
+.table-head .close {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+}
+.table-head .close:hover {
+  color: hsl(10, 80%, 60%);
+}
+.table-head .close svg {
+  width: 12px;
+  height: auto;
+}
+.expand-button {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  padding: 9px 12px;
+  color: hsl(200, 80%, 100%);
+  background: hsl(200, 80%, 60%);
+  opacity: 0;
+  visibility: hidden;
+  font-size: 18px;
+  transition: all .15s ease;
+}
+.result-wrapper:hover .expand-button,
+.item:hover .expand-button {
+  opacity: .5;
+  visibility: visible;
+}
+.result-wrapper:hover .expand-button,
+.item:hover .expand-button:hover {
+  opacity: 1;
+}
+.file-selector {}
+.file-selector label {
+  display: inline-block;
+  cursor: pointer;
+}
+.file-selector input {
+  display: none !important;
+}
