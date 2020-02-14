@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "axios": "^0.19.2",
-    "convert-csv-to-array": "^1.0.3",
-    "immutable": "^4.0.0-rc.12"
+    "paper": "^0.12.4"
   }
 }

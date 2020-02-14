@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Axios from 'axios';
-import { List } from 'immutable';
-import convertCSVToArray from 'convert-csv-to-array';
 import { useDropzone } from 'react-dropzone'
 import './style.css';
 
@@ -16,17 +14,25 @@ function downloadTrigger(fileName, download) {
 
 function MyDropzone({titleName, className, getFileInfo, children}) {
   const [file, setFile] = useState(null);
+  const [error, setError] = useState('');
 
   const onDrop = useCallback(acceptedFiles => {
-    setFile(acceptedFiles[0])
-    getFileInfo(acceptedFiles)
+    if (acceptedFiles[0].type === 'text/csv') {
+      setError('');
+      setFile(acceptedFiles[0]);
+      getFileInfo(acceptedFiles);
+    }
+    else {
+      setFile(null);
+      setError('這個檔案不是 .csv 喔！');
+    }
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   return (
     <div {...getRootProps()} className={`${className} ${isDragActive ? '-active' : ''}`}>
-      <input {...getInputProps()} multiple={false} />
+      <input {...getInputProps()} multiple={false} accept=".csv" />
       <div className="icon">
         <i className="far fa-file-alt"></i>
       </div>
@@ -36,15 +42,18 @@ function MyDropzone({titleName, className, getFileInfo, children}) {
         <p className="msg">點擊或拖曳到這裡</p>
       }
       {
-        file ?
-        <p className="name"><i className="fas fa-check-circle"></i> {titleName} {file.name}</p> :
-        <p className="info">{children}</p>
+        error !== '' &&
+        <p className="error"><i className="fas fa-times"></i> {error}</p>
       }
+      {
+        file && <p className="name"><i className="fas fa-check-circle"></i> {titleName} {file.name}</p>
+      }
+      <p className="info">{children}</p>
     </div>
   )
 }
 
-function Header() {
+function Application() {
   // Refs
   const refs = {
     tagSelector: useRef(null),
@@ -90,7 +99,6 @@ function Header() {
   }
   const handleLoadFiles = (files, sheetName) => {
     const file = files[0];
-    console.log(files)
     const reader = new FileReader();
     reader.onload = function () {
       const data = getCsvContent(reader.result);
@@ -117,18 +125,18 @@ function Header() {
     setSheetA({ name: newSheetAName, sheet: newSheetA });
     setSheetB({ name: newSheetBName, sheet: newSheetB });
   }
-  const handleLoadAllData = () => {
-    Axios.get('/config/test.csv')
-    .then(result => {
-      const Asheet = getCsvContent(result.data);
-      setSheetA({name: 'test.csv', sheet: Asheet});
-      Axios.get('/config/test2.csv')
-      .then(result => {
-        const Bsheet = getCsvContent(result.data);
-        setSheetB({name: 'test2.csv', sheet: Bsheet});
-      });
-    });
-  }
+  // const handleLoadAllData = () => {
+  //   Axios.get('/config/test.csv')
+  //   .then(result => {
+  //     const Asheet = getCsvContent(result.data);
+  //     setSheetA({name: 'test.csv', sheet: Asheet});
+  //     Axios.get('/config/test2.csv')
+  //     .then(result => {
+  //       const Bsheet = getCsvContent(result.data);
+  //       setSheetB({name: 'test2.csv', sheet: Bsheet});
+  //     });
+  //   });
+  // }
   const handleClickSelectTag = (item) => {
     const newTags = tags.slice();
     if (newTags.indexOf(item) === -1) {
@@ -237,22 +245,15 @@ function Header() {
           console.log(sheetCell)
         }
         let cell = sheetCell.replace(/#/gi, '＃');
-        // cell = cell.indexOf(',') === -1 ? cell : `"${cell}"`
         cell = cellIndex === 0 ? cell : `,${cell}`;
         line += cell;
       })
       csv += line + '\n'
     });
 
-    // sheet.forEach(line => {
-    //   console.log(line.join(','))
-    // })
-    console.log(csv)
-
     const fileName = `${name}`;
     const csvContent = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURI(csv);
 
-    console.log(csvContent)
 
     downloadTrigger(fileName, csvContent);
   }
@@ -449,4 +450,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default Application;
