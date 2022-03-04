@@ -1,59 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import Axios from 'axios';
-import { useDropzone } from 'react-dropzone'
+import React, { useEffect, useState, useRef } from 'react';
+import { Table, RightArrowAlt, Merge, Expand, Collapse, X, Pin, Import, Edit } from '@styled-icons/boxicons-regular';
+import { downloadTrigger } from '../utils/methods';
+import DropZone from '../DropZone';
 import './style.css';
 
-function downloadTrigger(fileName, download) {
-  const downloadTrigger = document.createElement('a');
-  downloadTrigger.setAttribute('download', fileName);
-  downloadTrigger.setAttribute('href', download);
-  downloadTrigger.click();
-  document.body.append(downloadTrigger)
-  // downloadTrigger.remove();
-}
-
-function MyDropzone({titleName, className, getFileInfo, children}) {
-  const [file, setFile] = useState(null);
-  const [error, setError] = useState('');
-
-  const onDrop = useCallback(acceptedFiles => {
-    if (acceptedFiles[0].type === 'text/csv') {
-      setError('');
-      setFile(acceptedFiles[0]);
-      getFileInfo(acceptedFiles);
-    }
-    else {
-      setFile(null);
-      setError('這個檔案不是 .csv 喔！');
-    }
-  }, [])
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
-  return (
-    <div {...getRootProps()} className={`${className} ${isDragActive ? '-active' : ''}`}>
-      <input {...getInputProps()} multiple={false} accept=".csv" />
-      <div className="icon">
-        <i className="far fa-file-alt"></i>
-      </div>
-      {
-        isDragActive ?
-        <p className="msg">拖曳到這裡</p> :
-        <p className="msg">點擊或拖曳到這裡</p>
-      }
-      {
-        error !== '' &&
-        <p className="error"><i className="fas fa-times"></i> {error}</p>
-      }
-      {
-        file && <p className="name"><i className="fas fa-check-circle"></i> {titleName} {file.name}</p>
-      }
-      <p className="info">{children}</p>
-    </div>
-  )
-}
-
-function Application() {
+const App = () => {
   // Refs
   const refs = {
     tagSelector: useRef(null),
@@ -70,6 +21,7 @@ function Application() {
   const [expandResult, setExpandResult] = useState('normal');
   const [isStart, setStart] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [example, setExample] = useState(false);
   const [sheetA, setSheetA] = useState(null);
   const [sheetB, setSheetB] = useState(null);
   const [sheetC, setSheetC] = useState(null);
@@ -258,14 +210,32 @@ function Application() {
     downloadTrigger(fileName, csvContent);
   }
 
+  function handleUseExampleSheet() {
+    const sheetAExample = getCsvContent(`title, value_1, value_2, value_3,
+    apple, 10, 12, 15,
+    banana, 8, 9, 2,
+    cat, 100, 8, 6,`);
+    const sheetBExample = getCsvContent(`title, name, value_2, value_3,
+    apple, 蘋果, 12, 15,
+    banana, 香蕉, 9, 2,
+    cat, 貓, 8, 6,`);
+    setSheetA({ name: 'example1', sheet: sheetAExample });
+    setSheetB({ name: 'example2', sheet: sheetBExample });
+    setExample(true);
+  }
+
   return (
     <div className="csv-matcher">
       <div className={`upload-wrapper ${isStart ? '-active' : ''}`}>
+        <button onClick={handleUseExampleSheet} className="example">Example Sheet</button>
         <div className={`drop-zone ${(sheetA && sheetB) ? '-active' : ''}`}>
-          <MyDropzone titleName="基礎表格" className="file" getFileInfo={file => handleLoadFiles(file, 'sheetA')}>【基礎表格】用來被比對表格內的資料，也可以幫表格內擴充更多內容。</MyDropzone>
-          <MyDropzone titleName="對照表格" className="file" getFileInfo={file => handleLoadFiles(file, 'sheetB')}>【對照表格】用來比對基礎表格內的資料，也可以用對照表格的欄位擴充到基礎表格。</MyDropzone>
+          <DropZone titleName="基礎表格" className={`file ${example ? '-blur' : ''}`} getFileInfo={file => handleLoadFiles(file, 'sheetA')}>【基礎表格】用來被比對表格內的資料，也可以幫表格內擴充更多內容。</DropZone>
+          <DropZone titleName="對照表格" className={`file ${example ? '-blur' : ''}`} getFileInfo={file => handleLoadFiles(file, 'sheetB')}>【對照表格】用來比對基礎表格內的資料，也可以用對照表格的欄位擴充到基礎表格。</DropZone>
           <button className={`start ${(sheetA && sheetB) ? '-active' : ''}`}
-          onClick={handleClickStart}><i className="fas fa-table"></i> 開始製作表格</button>
+          onClick={handleClickStart}>
+            <Table size={18} /> 
+            <span>開始製作表格</span>
+          </button>
         </div>
       </div>
       <div className={`application ${showResult ? '-result' : ''} -${expandResult}`} >
@@ -274,7 +244,7 @@ function Application() {
             <div className="tag-selector controller">
               <div className="dropdown">
                 <div className="head" onClick={ (e) => handleClickToggleElement(e, 'tagSelector') }>
-                  <i className="fas fa-thumbtack"></i>
+                  <Pin />
                   <span>核對欄位</span>
                 </div>
                 <div className="items" ref={refs.tagSelector}>
@@ -288,13 +258,13 @@ function Application() {
                 { tags &&
                   tags.map((tag, tagIndex) =>
                   <button key={tagIndex}
-                      onClick={() => handleClickSelectTag(tag)}><i className="fa fa-times"></i>{sheetB.sheet[0][tag]}</button>) }
+                      onClick={() => handleClickSelectTag(tag)}><X size={14} />{sheetB.sheet[0][tag]}</button>) }
               </div>
             </div>
             <div className="addition-selector controller">
               <div className="dropdown">
                 <div className="head" onClick={ (e) => handleClickToggleElement(e, 'additionSelector') }>
-                  <i className="fas fa-file-import"></i>
+                  <Import />
                   <span>添加欄位</span>
                 </div>
                 <div className="items" ref={refs.additionSelector}>
@@ -308,13 +278,13 @@ function Application() {
                 { additions &&
                   additions.map((addition, additionIndex) =>
                   <button key={additionIndex}
-                      onClick={() => handleClickSelectAddition(addition)}><i className="fa fa-times"></i>{sheetB.sheet[0][addition]}</button>) }
+                      onClick={() => handleClickSelectAddition(addition)}><X />{sheetB.sheet[0][addition]}</button>) }
               </div>
             </div>
           </div>
           <button className="options-submit"
           onClick={() => handleSubmitOptions()}>
-            <i className="fas fa-edit"></i>
+            <Edit size={18} />
             <span>製作表格</span>
           </button>
         </div>
@@ -322,7 +292,7 @@ function Application() {
           <div className="item left">
             <div className="table-head">
               <div className="name">
-                <i className="icon fas fa-table"></i>
+                <Table />
                 <span>基礎表格 { sheetA && sheetA.name }</span>
               </div>
               <div className="dropdown">
@@ -356,13 +326,13 @@ function Application() {
                 </tbody>
               </table>
             </div>
-            { expandTable === 'normal' && <button className="expand-button" onClick={() => setExpandTable('left')}><i className="fa fa-expand-alt"></i></button> }
-            { expandTable !== 'normal' && <button className="expand-button -reverse" onClick={() => setExpandTable('normal')}><i className="fa fa-compress-alt"></i></button> }
+            { expandTable === 'normal' && <button className="expand-button" onClick={() => setExpandTable('left')}><Expand /></button> }
+            { expandTable !== 'normal' && <button className="expand-button -reverse" onClick={() => setExpandTable('normal')}><Collapse /></button> }
           </div>
           <div className="item right">
             <div className="table-head">
               <div className="name">
-                <i className="icon fas fa-angle-double-left"></i>
+                <RightArrowAlt />
                 <span>對照表格 { sheetB && sheetB.name }</span>
               </div>
               <div className="dropdown">
@@ -404,14 +374,14 @@ function Application() {
                 </tbody>
               </table>
             </div>
-            {expandTable === 'normal' && <button className="expand-button" onClick={() => setExpandTable('right')}><i className="fa fa-expand-alt"></i></button>}
-            {expandTable !== 'normal' && <button className="expand-button -reverse" onClick={() => setExpandTable('normal')}><i className="fa fa-compress-alt"></i></button>}
+            {expandTable === 'normal' && <button className="expand-button" onClick={() => setExpandTable('right')}><Expand /></button>}
+            {expandTable !== 'normal' && <button className="expand-button -reverse" onClick={() => setExpandTable('normal')}><Collapse /></button>}
           </div>
         </div>
         <div className="result-wrapper">
           <div className="table-head">
             <div className="name">
-              <i className="icon fas fa-columns"></i>
+              <Merge />
               <span>合併後表格</span>
             </div>
             <div className="dropdown">
@@ -423,7 +393,7 @@ function Application() {
                 }}>下載此表格</button>
               </div>
             </div>
-            <button className="close" onClick={handleClickClearResult} ><i className="fas fa-times"></i></button>
+            <button className="close" onClick={handleClickClearResult} ><X /></button>
           </div>
           <div className="table">
             <table>
@@ -441,8 +411,8 @@ function Application() {
               </tbody>
             </table>
           </div>
-          {expandResult === 'fill' && <button className="expand-button" onClick={() => setExpandResult('normal')}><i className="fa fa-compress-alt"></i></button>}
-          {expandResult !== 'fill' && <button className="expand-button -reverse" onClick={() => setExpandResult('fill')}><i className="fa fa-expand-alt"></i></button>}
+          {expandResult === 'fill' && <button className="expand-button" onClick={() => setExpandResult('normal')}><Collapse size={24} /></button>}
+          {expandResult !== 'fill' && <button className="expand-button -reverse" onClick={() => setExpandResult('fill')}><Expand size={24} /></button>}
         </div>
         {/* <input type="file" id="input" onChange={handleFiles}></input> */}
       </div>
@@ -450,4 +420,4 @@ function Application() {
   );
 }
 
-export default Application;
+export default App;

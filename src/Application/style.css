@@ -13,6 +13,7 @@ p {
 }
 .csv-matcher {}
 .upload-wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,6 +27,13 @@ p {
   z-index: 1;
   transition: all .3s ease .5s;
 }
+.upload-wrapper .example {
+  position: absolute;
+  right: 4%;
+  bottom: 4%;
+  color: hsl(200, 30%, 50%);
+}
+
 .upload-wrapper.-active {
   opacity: 0;
   visibility: hidden;
@@ -65,6 +73,10 @@ p {
   align-items: center;
   width: 50%;
   cursor: pointer;
+}
+
+.drop-zone .file.-blur {
+  opacity: 0.5;
 }
 .drop-zone .file:before {
   content: "";
@@ -131,6 +143,12 @@ p {
   transform: translateY(-100%);
   transition: all .3s ease;
   z-index: -1;
+}
+.drop-zone .start > span {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+
 }
 .drop-zone .start.-active {
   transform: translateY(0);
@@ -327,7 +345,8 @@ p {
   color: hsl(10, 80%, 55%);
 }
 .selected button svg {
-  margin-right: 4px;
+  width: 16px;
+  height: auto;
 }
 
 .table-wrapper {
@@ -472,6 +491,10 @@ p {
   visibility: hidden;
   font-size: 18px;
   transition: all .15s ease;
+}
+.expand-button svg {
+  width: 24px;
+  height: auto;
 }
 .result-wrapper:hover .expand-button,
 .item:hover .expand-button {
