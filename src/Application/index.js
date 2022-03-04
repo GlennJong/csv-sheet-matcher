@@ -77,18 +77,6 @@ const App = () => {
     setSheetA({ name: newSheetAName, sheet: newSheetA });
     setSheetB({ name: newSheetBName, sheet: newSheetB });
   }
-  // const handleLoadAllData = () => {
-  //   Axios.get('/config/test.csv')
-  //   .then(result => {
-  //     const Asheet = getCsvContent(result.data);
-  //     setSheetA({name: 'test.csv', sheet: Asheet});
-  //     Axios.get('/config/test2.csv')
-  //     .then(result => {
-  //       const Bsheet = getCsvContent(result.data);
-  //       setSheetB({name: 'test2.csv', sheet: Bsheet});
-  //     });
-  //   });
-  // }
   const handleClickSelectTag = (item) => {
     const newTags = tags.slice();
     if (newTags.indexOf(item) === -1) {
