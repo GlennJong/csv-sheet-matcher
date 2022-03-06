@@ -199,14 +199,16 @@ const App = () => {
   }
 
   function handleUseExampleSheet() {
-    const sheetAExample = getCsvContent(`title, value_1, value_2, value_3,
+    const sheetAExample = getCsvContent(`name, value_1, value_2, value_3,
     apple, 10, 12, 15,
     banana, 8, 9, 2,
     cat, 100, 8, 6,`);
-    const sheetBExample = getCsvContent(`title, name, value_2, value_3,
-    apple, 蘋果, 12, 15,
-    banana, 香蕉, 9, 2,
-    cat, 貓, 8, 6,`);
+    const sheetBExample = getCsvContent(`name, extra_1, extra_2, extra_3,
+    apple, 8, 4, 2,
+    banana, 102, 55, 7,
+    cat, 221, 42, 60,
+    dog, 15, 98, 3,
+    eagle, 74, 41, 80,`);
     setSheetA({ name: 'example1', sheet: sheetAExample });
     setSheetB({ name: 'example2', sheet: sheetBExample });
     setExample(true);
