@@ -4,7 +4,7 @@ import { downloadTrigger } from '../utils/methods';
 import DropZone from '../DropZone';
 import './style.css';
 
-const App = () => {
+const CsvSheetMatcher = () => {
   // Refs
   const refs = {
     tagSelector: useRef(null),
@@ -410,4 +410,4 @@ const App = () => {
   );
 }
 
-export default App;
+export default CsvSheetMatcher;
